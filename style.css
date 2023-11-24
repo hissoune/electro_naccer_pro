@@ -1,0 +1,41 @@
+*{
+    padding: 0%;
+    border: none;
+    box-sizing:none;
+}
+body{
+    overflow-x: hidden;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)) ,url(backgroundimg.webp);    
+}
+  .forme_container{
+   
+    width: 100%;
+    height:500px ;
+    
+  }
+  .forme_container h1{
+    color: #fbfbfb;
+    margin-left: 32%;
+    font-size: 43px;
+    margin-top: 10%;
+    
+  }
+  .forme_container form{
+    margin-top: 5%;
+    margin-left: 10%;
+    color: aliceblue;
+
+  }
+  .forme_container form input{
+    width: 70%;
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+    color: #000;
+    background-color: beige;
+  }
+  .menu{
+    display:flex;
+    flex-direction: column;
+  }
