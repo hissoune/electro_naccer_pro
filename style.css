@@ -5,7 +5,7 @@
 }
 body{
     overflow-x: hidden;
-    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)) ,url(backgroundimg.webp);    
+    background-color: rgb(255, 253, 253); 
 }
   .forme_container{
    
@@ -38,4 +38,15 @@ body{
   .menu{
     display:flex;
     flex-direction: column;
+  }
+  .ariya:hover{
+    background-color: azure !important;
+    color: chartreuse  !important;
+  }
+  .active{
+    background-color: azure !important;
+    color: chartreuse  !important;
+  }
+  .btn.bg-primary.border-light:hover{
+    background-color: aqua !important ;
   }

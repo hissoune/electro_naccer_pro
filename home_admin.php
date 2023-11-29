@@ -38,13 +38,7 @@
     $result = $connection->query("SELECT * FROM products where ise_deleted = 0");
     $category_list =  $connection->query("SELECT * FROM category");
     ?>
-                  
-    
-     <div class="bg-primary p-3 d-flex justify-content-around">     <a href="index.php" class="btn bg-danger nani">log out</a>
-
-     <h4 class="text-center text-light ">welcom to electro naccer</h4>
-</div>
-
+       <a href="dashpord.php" class="btn bg-primary nani">dashboard</a>         
    <div class="d-flex bg-light">
     <form method="post" style="margin-left:30px" class="my-5 d-flex">
         <?php
@@ -100,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choose'])) {
         $sanitizedCategories = array_map(function ($category) use ($connection) {
             return "'" . $connection->real_escape_string($category) . "'";
         }, $selectedCategories);
-          
+
         $catChecked = implode(',', $sanitizedCategories);
-        echo $catChecked;  
+
        
         $sql = "SELECT products.*, category.category_name FROM products 
                 JOIN category ON products.categorie_id_fk = category_name

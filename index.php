@@ -98,7 +98,8 @@ if(isset($_POST['usernam'], $_POST['email_up'], $_POST['passwords'])){
   $pawwwords = $_POST['passwords'];
 
   $connection->query("INSERT INTO User (user_nam ,email , Passwords , is_admin,setuation) VALUES ( '$username' ,'$email_up', '$pawwwords', 0 , 0)");
-    echo' <script>alert("sucsess!!  wait and sign in")</script>';
+  header("Location:modify_category.php");
+  exit();
     
 }
 
@@ -118,14 +119,26 @@ if(isset($_POST['usernam'], $_POST['email_up'], $_POST['passwords'])){
 
        
         if ($result->num_rows > 0) {
-            // Successful login - redirect to home.php
+           
+            $user = $result->fetch_assoc();
+
+   
+        if ($user['is_admin'] == 1 && $user['setuation']==1) {
+           
             header("Location: dashpord.php");
             exit();
-        } else {
-            echo '<script>alert("Login failed. Please check your email and password.");</script>';
+        } 
+   
+    else if ($user['is_admin'] == 0 && $user['setuation' ] == 1){
+        header("Location: home.php");
+        exit();
+    }
+    else {
+        header("Location:modify_category.php");
+        exit();
         }
-
-        // Close the statement
+    }
+       
         $stmt->close();
     }
 }
