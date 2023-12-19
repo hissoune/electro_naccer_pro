@@ -1,3 +1,12 @@
+
+<?php
+session_start();
+if (!isset($_SESSION['email_in'])) {
+    header('Location: index.php');
+    exit(); 
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +30,37 @@
 </style>
 </head>
 <body>
+<div style="background-color:rgb(53, 163, 163);" class="d-flex justify-content-around  p-3 container ">
+<div class="w-100 ">
+    <nav style=" background-color:aqua;" class="navbar navbar-expand-lg navbar-light bg-light flex-column w-100 ">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNavbar"
+        aria-controls="sidebarNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse " id="sidebarNavbar">
+        <ul class="navbar-nav ">
+           
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="dashpord.php">manage users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="MANGECAT.php">manage categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="manage_products.php">manage products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn nanimo bg-primary text-light" href="index.php">log out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+</div>
+</div>
+  <div class="container justify-content-center p-5">
     <form class="form-section" method="post" enctype="multipart/form-data">
         <div class="form-group mb-3 w-50 mx-5" >
        <label for="name_category">new name</label>
@@ -57,17 +97,10 @@
        </div>
        <button  type="submit" name="submit" class="btn bg-primary text-light mx-4 nani">modifier</button>
     </form>
+    </div>
     <?php
-$hostname = "localhost";
-$username = "root";
-$password = "";
-$database = "Electro_naccer_pro";
+include('conex.php');
 
-$connection = new mysqli($hostname, $username, $password, $database);
-
-if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_GET["id"];
@@ -80,11 +113,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pro_desc= $_POST['desc_pro'];
         $quntt_min= $_POST['quntt_min'];
         $quntt_stk=$_POST['quntt_stk'];
-        $img_cart = 'images/' . $_FILES['file']['name'];
-        
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $img_cart)) {
+
+        $photo = basename($_FILES['file']['name']);
+        $targetPath = './images/' . $photo;
+        $tempPath = $_FILES['file']['tmp_name'];
+
+        if (move_uploaded_file($tempPath, $targetPath)) {
             $pr_id = $_GET['id'];
-            $connection->query("UPDATE products SET etiquette=' $pro_nm', description_pro=' $pro_desc',prix_final=' $pro_prix', Offre_de_prix='  $offre',quantite_min='  $quntt_min',quantite_stock='  $quntt_stk', pro_image='$img_cart' WHERE reference=$pr_id");
+            $connection->query("UPDATE products SET etiquette=' $pro_nm', description_pro=' $pro_desc',prix_final=' $pro_prix', Offre_de_prix='  $offre',quantite_min='  $quntt_min',quantite_stock='  $quntt_stk', pro_image='$photo' WHERE reference=$pr_id");
 
             header("Location: manage_products.php");
             exit();

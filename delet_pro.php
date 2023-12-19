@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['email_in'])) {
+    header('Location: index.php');
+    exit(); 
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +23,7 @@
 </head>
 <body>
 
-    ?<?php
+    <?php
     $hostname = "localhost";
     $username = "root";
     $password = "";

@@ -1,3 +1,14 @@
+
+<?php
+include('conex.php');
+
+session_start();
+if (!isset($_SESSION['email_in'])) {
+    header('Location: index.php');
+    exit(); 
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,29 +34,48 @@
 </style>
 </head>
 <body class="bg-light">
-<?php
-$hostname = "localhost";
-$username = "root";
-$password = "";
-$database = "Electro_naccer_pro";
 
-$connection = new mysqli($hostname, $username, $password, $database);
+<div style="background-color:rgb(53, 163, 163);" class="d-flex justify-content-around  p-3 container ">
+<div class="w-100 ">
+    <nav style=" background-color:aqua;" class="navbar navbar-expand-lg navbar-light bg-light flex-column w-100 ">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNavbar"
+        aria-controls="sidebarNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+    <div class="collapse navbar-collapse " id="sidebarNavbar">
+        <ul class="navbar-nav ">
+           
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="dashpord.php">manage users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="MANGECAT.php">manage categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="manage_products.php">manage products</a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link  nanimo  text-dark" href="index.php"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right mb-1" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+  <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+</svg></a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-?>
-<div style="background-color:rgb(53, 163, 163);" class="d-flex justify-content-around  p-3  ">
 
-
-<a href="dashpord.php" class="btn bg-primary text-light nanda">back</a>
-    <h4 class="text-light">manage your products</h4>
+</div>
 </div>
 
 
-
-<div id="categories"  class=" w-100 " style="">
+<div id="categories"  class=" container " style="">
+<div class="bg-light d-flex justify-content-end mb-0">
+    
+    <a href="ajouter_pro.php"  class="btn bg-primary p-1 my-2 mx-5 text-light nani">add product</a>
+    
+</div>
     <table class="table table-bordered  w-100 ">
         <thead class="bg-black text-light ">
             <tr class="table ">
@@ -87,7 +117,7 @@ if (!$connection) {
                     echo '<td class="border-black p-3">' . $pro_name . '</td>';
                     echo '<td class="border-black p-3" >' . $code_bars . '</td>';
                     echo '<td class="border-black p-3" >' . $pro_descrip . '</td>';
-                    echo '<td class="border-black p-3 "><img src="images/' . $pro_img . '" class="w-25 h-25 " alt="Product Image" ></td>';
+                    echo '<td class="border-black p-3 "><img src="images/' . $pro_img . '" class="w-75 h-75 " alt="Product Image" ></td>';
                     echo '<td class="border-black p-3" >' . $prix_dachat . '</td>';
                     echo '<td class="border-black p-3" >' . $prix_final . '</td>';
                     echo '<td class="border-black p-3" >' . $ofre . '</td>';
@@ -97,7 +127,7 @@ if (!$connection) {
                     echo '<td class="border-black p-2">
                           <form method="POST" class="product-action-form  d-flex justify-content-betwen ">
                                <input type="hidden" name="category_id" value="' . $pro_id . '">
-                               <a   href="delet_pro.php?id='. $pro_id.'"  class="btn bg-danger text-light mx-1  w-50 nanda">delet</a>
+                               <a   href="delet_pro.php?id='. $pro_id.'"  class="btn bg-warning text-light mx-1  w-50 nanda">archif</a>
                                <a  type="submit"  href="pro_modif.php?id='. $pro_id.'"  class="btn bg-primary text-light w-50 mx-1 nani">Modify</a>
                           </form>
                           </td>';
@@ -112,15 +142,11 @@ if (!$connection) {
             ?>
         </tbody>
     </table>
-    <div class="bg-light d-flex justify-content-end mb-0">
-    
-    <a href="ajouter_pro.php"  class="btn bg-primary p-1 my-2 mx-5 text-light nani">add product</a>
     
 </div>
-</div>
     
-  <h2 class="text-center bg-black p-5 text-light">l'archife</h2>
-<div id="categories"  class=" w-100  " style="">
+<h2 class="text-center bg-dark p-2 text-light container">l'archife</h2>
+<div id="categories"  class=" container  " style="">
     <table class="table table-bordered   w-100">
         <thead class="bg-black text-light ">
             <tr class="table ">
@@ -160,16 +186,17 @@ if (!$connection) {
                     echo '<td class="border-black p-3">' . $pro_name . '</td>';
                     echo '<td class="border-black p-3" >' . $code_bars . '</td>';
                     echo '<td class="border-black p-3" >' . $pro_descrip . '</td>';
-                    echo '<td class="border-black p-3 "><img src="' . $pro_img . '" class="w-25 h-25 " alt="Product Image" ></td>';
+                    echo '<td class="border-black p-3 "><img src="images/' . $pro_img . '" class="w-25 h-25 " alt="Product Image" ></td>';
                     echo '<td class="border-black p-3" >' . $prix_dachat . '</td>';
                     echo '<td class="border-black p-3" >' . $prix_final . '</td>';
                     echo '<td class="border-black p-3" >' . $ofre . '</td>';
                     echo '<td class="border-black p-3" >' . $quantt_min . '</td>';
                     echo '<td class="border-black p-3" >' . $quantt_stok . '</td>';
                     echo '<td class="border-black p-2">
-                          <form method="POST" class="category-action-form mx-3">
+                          <form method="POST" class="category-action-form mx-3 d-flex">
                                <input type="hidden" name="category_id" value="' . $pro_id . '">
-                               <a   href="restor_pro.php?id='. $pro_id.'"  class="btn bg-warning text-light nanimo">restore</a>
+                               <a   href="restor_pro.php?id='. $pro_id.'"  class="btn btn-success text-light nanimo mx-1">restore</a>
+                               <a   href="delet_prod.php?id='. $pro_id.'"  class="btn bg-danger text-light nanimo mx-1">delet</a>
 
                           </form>
                           </td>';

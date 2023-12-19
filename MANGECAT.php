@@ -1,3 +1,14 @@
+<?php
+session_start();
+if (!isset($_SESSION['email_in'])) {
+    header('Location: index.php');
+    exit(); 
+}
+include('conex.php');
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,34 +24,53 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php
-$hostname = "localhost";
-$username = "root";
-$password = "";
-$database = "Electro_naccer_pro";
 
-$connection = new mysqli($hostname, $username, $password, $database);
 
-if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+<style>.nanimo:hover {
+        transform: scale(1.1);
+        transition: transform 0.3s ease; 
+        
+    }</style>
+<div style="background-color:rgb(53, 163, 163);" class="d-flex justify-content-around  p-3  container">
+<div class="w-100 ">
+    <nav style=" background-color:aqua;" class="navbar navbar-expand-lg navbar-light bg-light flex-column w-100 ">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNavbar"
+        aria-controls="sidebarNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-?>
-<div style="background-color:rgb(53, 163, 163);" class="d-flex justify-content-around  p-3  ">
-<a href="dashpord.php" class="btn bg-primary text-light">back</a>
-    <h4 class="text-light">manage your categories</h4>
+    <div class="collapse navbar-collapse " id="sidebarNavbar">
+        <ul class="navbar-nav ">
+           
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="dashpord.php">manage users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="MANGECAT.php">manage categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="manage_products.php">manage products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn nanimo bg-primary text-light " href="index.php">log out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
 </div>
-<div>
-    
-    <a href="ajout_cat.php"  class="btn bg-primary p-3 my-2 mx-5 text-light">add category</a>
-    
 </div>
-
-<div id="categories"  class=" w-100 mb-5" style="">
-    <table class="table  w-100">
+<div class="bg-light d-flex justify-content-end mb-0 container">
+    
+<a href="ajout_cat.php"  class="btn bg-primary p-2 my-2 mx-5 text-light nanimo">add category</a>    
+</div>
+ 
+<div id="categories"  class=" container mb-5" style="">
+    <table class="table  table-bordered w-100">
         <thead class="bg-black text-light ">
             <tr class="table ">
-                <th class="p-3  border-black" scope="col">ID</th>
+               
                 <th class="p-3  border-black" scope="col">category_name</th>
                 <th class="p-3  border-black" scope="col">category_desc</th>
                 <th class="p-3 border-black" scope="col">category_imag</th>
@@ -57,18 +87,19 @@ if (!$connection) {
                     $categoryName = $row['category_name'];
                     $categoryDiscrip = $row['category_desc'];
                     $categoryImg = $row['category_imag'];
-                    $categoryId = $row['category_id'];
+                    $categoryid = $row['category_id'];
+                    
 
                     echo '<tr class="justify-content-center">';
-                    echo '<td class="border-black p-3">' . $categoryId . '</td>';
+                    
                     echo '<td class="border-black p-3">' . $categoryName . '</td>';
                     echo '<td class="border-black p-3" >' . $categoryDiscrip . '</td>';
-                    echo '<td class="border-black p-3 "><img src="' . $categoryImg . '" class="w-25 h-25 " alt="Product Image" ></td>';
+                    echo '<td class="border-black p-3 "><img src="images/' . $categoryImg . '" class="w-25 h-25 " alt="Product Image" ></td>';
                     echo '<td class="border-black p-2">
                           <form method="POST" class="category-action-form mx-3">
-                               <input type="hidden" name="category_id" value="' . $categoryId . '">
-                               <a   href="delet_cat.php?id='. $categoryId.'"  class="btn bg-danger text-light">delet</a>
-                               <a  type="submit"  href="modif_cat.php?id='. $categoryId.'"  class="btn bg-primary text-light">Modify</a>
+                               <input type="hidden" name="category_name" value="' . $categoryid . '">
+                               <a   href="delet_cat.php?id='. $categoryid.'"  class="btn bg-danger text-light nanimo">delet</a>
+                               <a  href="modif_cat.php?id='. $categoryid.'"  class="btn bg-primary text-light nanimo">Modify</a>
                           </form>
                           </td>';
                     echo "</tr>";
@@ -84,14 +115,13 @@ if (!$connection) {
     </table>
 </div>
     
-  <h2 class="text-center bg-black p-5 text-light">l'archife</h2>
-<div id="categories"  class=" w-100  " style="">
-    <table class="table  w-100">
+  <h2 class="text-center bg-dark p-2 text-light container">l'archife</h2>
+<div id="categories"  class=" container  " style="">
+    <table class="table table-bordered container">
         <thead class="bg-black text-light ">
             <tr class="table ">
                 <th class="p-3  border-black" scope="col">ID</th>
                 <th class="p-3  border-black" scope="col">category_name</th>
-                <th class="p-3  border-black" scope="col">category_desc</th>
                 <th class="p-3 border-black" scope="col">category_imag</th>
                 <th class="p-3  border-black" scope="col">delete/modify</th>
             </tr>
@@ -106,17 +136,18 @@ if (!$connection) {
                     $categoryName = $row['category_name'];
                     $categoryDiscrip = $row['category_desc'];
                     $categoryImg = $row['category_imag'];
-                    $categoryId = $row['category_id'];
+                    $categoryid =$row['category_id'];
 
                     echo '<tr class="justify-content-center">';
-                    echo '<td class="border-black p-3">' . $categoryId . '</td>';
+                   
                     echo '<td class="border-black p-3">' . $categoryName . '</td>';
                     echo '<td class="border-black p-3" >' . $categoryDiscrip . '</td>';
-                    echo '<td class="border-black p-3 "><img src="' . $categoryImg . '" class="w-25 h-25 " alt="Product Image" ></td>';
+                    echo '<td class="border-black p-3 "><img src="./images/' . $categoryImg . '" class="w-25 h-25 " alt="Product Image" ></td>';
                     echo '<td class="border-black p-2">
                           <form method="POST" class="category-action-form mx-3">
-                               <input type="hidden" name="category_id" value="' . $categoryId . '">
-                               <a   href="restorecat.php?id='. $categoryId.'"  class="btn bg-warning text-light">restore</a>
+                               <input type="hidden" name="category_name" value="' . $categoryid . '">
+                               <a   href="restorecat.php?id='. $categoryid.'"  class="btn bg-warning text-light nanimo">restore</a>
+                               <a   href="delet.php?id='. $categoryid.'"  class="btn bg-danger text-light nanimo">delet</a>
                           </form>
                           </td>';
                     echo "</tr>";

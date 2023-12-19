@@ -1,15 +1,11 @@
-
 <?php
-   $hostname = "localhost";
-   $username = "root";
-   $password = "";
-   $database = "Electro_naccer_pro";
-   
-   $connection = new mysqli($hostname, $username, $password, $database);
-   
-   if (!$connection) {
-       die("Connection failed: " . mysqli_connect_error());
-   }
+session_start();
+if (!isset($_SESSION['email_in'])) {
+    header('Location: index.php');
+    exit(); 
+}
+include('conex.php');
+
    
 ?>
 
@@ -41,6 +37,37 @@
 </style>
 </head>
 <body>
+<div style="background-color:rgb(53, 163, 163);" class="d-flex justify-content-around  p-3 container ">
+<div class="w-100 ">
+    <nav style=" background-color:aqua;" class="navbar navbar-expand-lg navbar-light bg-light flex-column w-100 ">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNavbar"
+        aria-controls="sidebarNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse " id="sidebarNavbar">
+        <ul class="navbar-nav ">
+           
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="dashpord.php">manage users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="MANGECAT.php">manage categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="manage_products.php">manage products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn nanimo bg-primary text-light" href="index.php">log out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+</div>
+</div>
+<div class="container justify-content-center p-5">
     <form class="form-section" method="post" enctype="multipart/form-data">
         <div class="form-group mb-3 w-50 mx-5" >
        <label for="name_category">new name</label>
@@ -76,22 +103,25 @@
 
        </div>
 
-       <form method="post" style="margin-left:30px" class="  my-5 mb-5">
+       <form method="post" style="margin-left:100px" class="  my-5 mb-5 mx-5">
        
         <select name="selectedCategory" id="categorySelect">
-            <?php
-             $category_list =  $connection->query("SELECT * FROM Category");
-           
-            while ($productsCategory =   $category_list->fetch_assoc()) {
-                $categoryName = $productsCategory['category_name'];
-                echo '<option value="' . $categoryName . '" style="color: red; font-size: 18px;">' . $categoryName . '</option>';
-            }
-            ?>
+        <?php
+        $category_list = $connection->query("SELECT * FROM Category");
+        
+        while ($productsCategory = $category_list->fetch_assoc()) {
+            $categoryId = $productsCategory['category_id'];
+            $categoryName = $productsCategory['category_name'];
+            
+            echo '<option value="' . $categoryId . '" style="color: red; font-size: 18px;">' . $categoryName . '</option>';
+        }
+        ?>
         </select>
         <button  type="submit" name="submit" class="btn bg-primary text-light mx-4 nani">modifier</button>
 </form>
    
     </form>
+    </div>
     <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -109,6 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if (isset($_POST['selectedCategory'])) {
             $selectedCategory = $_POST['selectedCategory'];
+
         }
 
        

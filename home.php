@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['email_in'])) {
+    header('Location: index.php');
+    exit(); 
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,29 +32,21 @@
 </head>
 
 <body>
+
     <?php  
-    $hostname = "localhost";
-    $username = "root";
-    $password = "";
-    $database = "Electro_naccer_pro";
-    
-    $connection = new mysqli($hostname, $username, $password, $database);
-    
-    if (!$connection) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
+    include('conex.php');
+
     $result = $connection->query("SELECT * FROM products where ise_deleted = 0");
     $category_list =  $connection->query("SELECT * FROM category");
     ?>
                   
     
-     <div class="bg-primary p-3 d-flex justify-content-around">     <a href="index.php" class="btn bg-danger nani">log out</a>
+     <div class="bg-primary p-3 d-flex justify-content-around">     <a href="log_out.php" class="btn bg-danger nani">log out</a>
 
      <h4 class="text-center text-light ">welcom to electro naccer</h4>
 </div>
-
    <div class="d-flex bg-light">
-    <form method="post" style="margin-left:30px" class="my-5 d-flex">
+    <form id="filterForm" method="post" style="margin-left:30px" class="my-5 d-flex">
         <?php
         while ($productsCategory = $category_list->fetch_assoc()) {
             $categoryName = $productsCategory['category_name'];
@@ -67,10 +67,9 @@
 <?php
 function display_products($result)
 {
-    echo '<div class="container-fluid row mx-auto my-4">';
+    echo '<div  id="productsContainer" class="container-fluid row mx-auto my-4">';
     
     while ($product = $result->fetch_assoc()) {
-       
         $imagePath = $product['pro_image'];
         $label = $product['etiquette'];
         $discription_pro = $product['description_pro'];
@@ -92,51 +91,49 @@ function display_products($result)
     echo '</div>';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choose'])) {
-    if (!empty($_POST['filter'])) {
-        $selectedCategories = $_POST['filter'];
 
-     
-        $sanitizedCategories = array_map(function ($category) use ($connection) {
-            return "'" . $connection->real_escape_string($category) . "'";
-        }, $selectedCategories);
-          
-        $catChecked = implode(',', $sanitizedCategories);
-        echo $catChecked;  
-       
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choose'])) {
+   
+    if (isset($_POST['filter'])) {
+        $selectedCategories = array_map('mysqli_real_escape_string', array_fill(0, count($_POST['filter']),$connection), $_POST['filter']);
+        $catChecked = implode("','", $selectedCategories);
+
         $sql = "SELECT products.*, category.category_name FROM products 
-                JOIN category ON products.categorie_id_fk = category_name
-                WHERE category.category_name IN ($catChecked)";
-        $result = $connection->query($sql);
+        JOIN category ON products.categorie_id_fk = category.category_id
+        WHERE category.category_name IN ('$catChecked')";
 
         
-        display_products($result);
-    } 
-    else if(!empty($_POST['quantt'])){
-        $sql = "SELECT * from Products where quantite_stock < quantite_min;";
-        $result = $connection->query($sql);
-        display_products($result);
+         $result = $connection->query($sql);
+         display_products($result);
+    }else if (isset($_POST['quantt'])) {
+        
+            $sql = "SELECT * from products where quantite_stock<quantite_min;";
+             $result = $connection->query($sql);
+             display_products($result);
+
     }
     
     else {
-       
         $sql = "SELECT products.*, category.category_name FROM products 
-                JOIN category ON products.categorie_id_fk = category.category_name";
-        $result = $connection->query($sql);
-
-       
-        display_products($result);
+        JOIN category ON products.categorie_id_fk = category.category_id";
+         $result = $connection->query($sql);
+         display_products($result);
     }
-    
 } else {
-  
     $sql = "SELECT products.*, category.category_name FROM products 
-            JOIN category ON products.categorie_id_fk = category.category_name";
-    $result = $connection->query($sql);
-
-   
-    display_products($result);
+    JOIN category ON products.categorie_id_fk = category.category_id";
+     $result = $connection->query($sql);
+     display_products($result);
 }
+
+
+
    ?>
+   
 </body
 </html>
+
+
+
+

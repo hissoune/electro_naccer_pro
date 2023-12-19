@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['email_in'])) {
+    header('Location: index.php');
+    exit(); 
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +22,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div style="background-color:rgb(53, 163, 163);" class="d-flex justify-content-around  p-3 container ">
+<div class="w-100 ">
+    <nav style=" background-color:aqua;" class="navbar navbar-expand-lg navbar-light bg-light flex-column w-100 ">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarNavbar"
+        aria-controls="sidebarNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse " id="sidebarNavbar">
+        <ul class="navbar-nav ">
+           
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="dashpord.php">manage users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="MANGECAT.php">manage categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nanimo" href="manage_products.php">manage products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn nanimo bg-primary text-light" href="index.php">log out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+</div>
+</div>
+<div   class="container justify-content-center p-5">
 <form class="form-section" method="post" enctype="multipart/form-data">
         <div class="form-group mb-3 w-50 mx-5" >
        <label for="name_category">your category name</label>
@@ -29,6 +69,7 @@
        </div>
        <button  type="submit" name="submit" class="btn bg-primary text-light mx-4">ajouter votre category</button>
     </form>
+    </div>
     <?php
     $hostname = "localhost";
 $username = "root";
@@ -48,12 +89,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['name_cat'], $_POST['desc_cat'], $_FILES['file'])) {
         $cat_name = $_POST['name_cat'];
         $cat_desc = $_POST['desc_cat'];
-        $img_cart = 'images/' . $_FILES['file']['name'];
+        $photo = basename($_FILES['file']['name']);
+        $targetPath = './images/' . $photo;
+        $tempPath = $_FILES['file']['tmp_name'];
 
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $img_cart)) {
+        if (move_uploaded_file($tempPath, $targetPath)) {
           
-            $connection->query("INSERT INTO  category   ( category_name, category_desc, category_imag)
-                      VALUES ('$cat_name' ,'$cat_desc' , '$img_cart'); 
+            $connection->query("INSERT INTO  category   ( category_name, category_desc, category_imag,ise_deleted)
+                      VALUES ('$cat_name' ,'$cat_desc' , '$photo',0); 
              ");
 
             header("Location: MANGECAT.php");
